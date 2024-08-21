@@ -3,12 +3,13 @@
 
 <div class="row">
     <div class="col-md-6 mx-auto mt-3">
-        <form class="needs-validation" action="{{route('admin.store')}}" method="post" novalidate>
+        <form class="needs-validation" action="{{route('admin.update',['admin'=>$post->id])}}" method="post" novalidate>
           @csrf
+          @method('PUT')
             <div class="form-row">
               <div class="col-md-4 mb-3">
                 <label for="validationCustom01">Title</label>
-                <input type="text" name="title" class="form-control" id="validationCustom01" placeholder="Enter Post tile" value="Mark" required>
+                <input type="text" name="title" class="form-control" value="{{$post->title}}" id="validationCustom01" placeholder="Enter Post tile" required>
                 @error('title')
                       <p class="text-danger">{{$message}}</p>
                 @enderror
@@ -17,7 +18,7 @@
             <div class="form-row">
               <div class="col-md-4 mb-3">
                 <label for="validationCustom01">Description</label>
-                <textarea name="description" id="" cols="30" rows="10" class="form-control" placeholder="Enter the Post Description"></textarea>
+                <textarea name="description" id="" cols="30" rows="10" class="form-control" placeholder="Enter the Post Description">{{$post->description}}</textarea>
                 @error('description')
                 <p class="text-danger">{{$message}}</p>
                 @enderror

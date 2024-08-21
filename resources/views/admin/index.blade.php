@@ -5,6 +5,7 @@
 
     <div class="col-md-6">
         <a href="{{route('admin.create')}}" class="btn btn-primary mb-2">Creat Post</a>
+        
         <table class="table">
             <thead>
               <tr>
@@ -15,24 +16,20 @@
               </tr>
             </thead>
             <tbody>
+              @foreach ($posts as $post)
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <th scope="row">#</th>
+                <td>{{$post->id}}</td>
+                <td>{{$post->title}}</td>
+                <td>{{$post->description}}</td>
+                <td>
+                  <a href="{{route('admin.edit',['admin'=>$post->id])}}"><i class="fa fa-edit"></i></a>
+                  |
+                  <a href=""><i class="fa fa-trash"></i></a>
+                </td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
+              @endforeach
+              
             </tbody>
           </table>
     </div>
