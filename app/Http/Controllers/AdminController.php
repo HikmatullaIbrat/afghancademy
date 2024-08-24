@@ -34,15 +34,23 @@ class AdminController extends Controller
         // return  $request->all();
         $request->validate([
             'title' => 'required|min:10',
-            'description' => 'required'
+            'description' => 'required',
+            'image'=>'required|image    '
         ],[
             // to customize the title message if no data is entered
             'title.required' => "Please Enter the Title",
             'title.min' => "Please Enter more than 10 characters"
         ]);
+
+        $image_new_name = '';
+        if($request->has('image')){
+            $image = $request->image;
+            $image_new_name = time(). $image->getClientOriginalName();
+            $image->move('upload',$image_new_name);
+        }
         //  after validation of data and sending data from front to server we catch and store data in data by
         //  create method after we specify fillabel columns in Post model
-        Post::create(['title'=>$request->title, 'description'=>$request->description]);
+        Post::create(['title'=>$request->title, 'description'=>$request->description,'image'=>$image_new_name]);
         return redirect()->route('admin.index');
 
     }
@@ -71,8 +79,8 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, Post $admin)
-    public function update(Request $request, $admin)
+    public function update(Request $request, Post $admin)
+    // public function update(Request $request, $admin)
     {
         // get validated data from editing post page
         $request->validate([
@@ -83,11 +91,21 @@ class AdminController extends Controller
             'title.required' => "Please Enter the Title",
             'title.min' => "Please Enter more than 10 characters"
         ]);
+
+        $image_new_name = '';
+        if($request->has('image')){
+            // unlink('upload/'.$admin->image); // This is for deleting before file, so when what to update new image
+            $image = $request->image;
+            $image_new_name = time(). $image->getClientOriginalName();
+            $image->move('upload',$image_new_name);
+            $admin->image = $image_new_name;
+            $admin->save();
+        }
         // and after data is sent for updating, send it to database to be updated
-        // $admin->title= $request->title;
-        // $admin->description = $request->description;
-        // $admin->save();
-        Post::where('id',$admin)->update(['title'=>$request->title, 'description'=>$request->description]);
+        $admin->title= $request->title;
+        $admin->description = $request->description;
+        $admin->save();
+        // Post::where('id',$admin)->update(['title'=>$request->title, 'description'=>$request->description, 'image'=>$request->image]);
 
         return redirect()->route('admin.index');
 
@@ -96,8 +114,11 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        unlink('upload/'.$post->image);
+        $post->delete();
+        return redirect()->back();
     }
 }

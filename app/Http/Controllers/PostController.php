@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -12,7 +13,13 @@ class PostController extends Controller
     public function index()
     {
         return view('post.index')
-        ->with('page','post');
+        ->with('page','post')
+        ->with('posts',Post::paginate(2));
+        // $posts = Post::orderBy('created_at','DESC')->paginate(2);
+        // return view('post.index')
+        // ->with('page','post')
+        // ->with('posts',$posts);
+
     }
 
     /**
@@ -34,9 +41,13 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('post.details')
+        ->with('page','post')
+        ->with('post_details',$post);
+        
     }
 
     /**
