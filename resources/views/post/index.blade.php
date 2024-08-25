@@ -2,6 +2,8 @@
 @section('content')
 <h1>{{$page}}</h1>
 
+
+
 @foreach($posts as $post)
 <div class="card mx-auto" style="width: 18rem;">
   <img src="{{asset('upload/'.$post->image)}}" alt="image">
@@ -13,9 +15,12 @@
   
 </div>
 @endforeach
-<div>
-  {{$posts->links()}}
-</div>
+
+  <div class="col-2 mt-3 mx-auto ">
+    {{$posts->links()}}
+  </div>
+  
+
 
 
 @endsection
